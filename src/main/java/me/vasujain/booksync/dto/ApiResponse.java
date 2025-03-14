@@ -1,4 +1,4 @@
-package me.vasujain.booksync.response;
+package me.vasujain.booksync.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

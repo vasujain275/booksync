@@ -1,7 +1,7 @@
 package me.vasujain.booksync.util;
 
 import me.vasujain.booksync.dto.PaginatedResult;
-import me.vasujain.booksync.response.ApiResponse;
+import me.vasujain.booksync.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import java.time.LocalDate;
 
