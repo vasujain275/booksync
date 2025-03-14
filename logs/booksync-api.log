@@ -1,0 +1,100 @@
+2025-03-14T15:25:59.133+05:30  INFO 250143 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Starting BookSyncApplication using Java 23.0.2 with PID 250143 (/home/vasu/personal/booksync/target/classes started by vasu in /home/vasu/personal/booksync)
+2025-03-14T15:25:59.134+05:30 DEBUG 250143 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-14T15:25:59.134+05:30  INFO 250143 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-03-14T15:25:59.684+05:30  INFO 250143 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-14T15:25:59.691+05:30  INFO 250143 --- [Book Sync] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-14T15:25:59.692+05:30  INFO 250143 --- [Book Sync] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-03-14T15:25:59.721+05:30  INFO 250143 --- [Book Sync] [main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2025-03-14T15:25:59.722+05:30  INFO 250143 --- [Book Sync] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 558 ms
+2025-03-14T15:25:59.844+05:30  INFO 250143 --- [Book Sync] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-03-14T15:26:00.060+05:30  INFO 250143 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Starting...
+2025-03-14T15:26:00.148+05:30  INFO 250143 --- [Book Sync] [main] com.zaxxer.hikari.pool.HikariPool        : BooksyncHikariCP - Added connection org.postgresql.jdbc.PgConnection@3e38c472
+2025-03-14T15:26:00.148+05:30  INFO 250143 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Start completed.
+2025-03-14T15:26:00.163+05:30  INFO 250143 --- [Book Sync] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/booksyncDB (PostgreSQL 17.2)
+2025-03-14T15:26:00.179+05:30  INFO 250143 --- [Book Sync] [main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2025-03-14T15:26:00.181+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.007s)
+2025-03-14T15:26:00.188+05:30  INFO 250143 --- [Book Sync] [main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2025-03-14T15:26:00.223+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2025-03-14T15:26:00.226+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - create user table"
+2025-03-14T15:26:00.236+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - create book table"
+2025-03-14T15:26:00.243+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - create loan table"
+2025-03-14T15:26:00.250+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - create book review table"
+2025-03-14T15:26:00.258+05:30  INFO 250143 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.009s)
+2025-03-14T15:26:00.306+05:30  INFO 250143 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api/v1'
+2025-03-14T15:26:00.311+05:30  INFO 250143 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Started BookSyncApplication in 1.455 seconds (process running for 1.648)
+2025-03-14T15:26:29.266+05:30  INFO 250143 --- [Book Sync] [http-nio-8080-exec-4] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-14T15:26:29.266+05:30  INFO 250143 --- [Book Sync] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-03-14T15:26:29.267+05:30  INFO 250143 --- [Book Sync] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-03-14T15:46:55.278+05:30  INFO 250143 --- [Book Sync] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-14T15:46:55.279+05:30  INFO 250143 --- [Book Sync] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-14T15:46:55.281+05:30  INFO 250143 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown initiated...
+2025-03-14T15:46:55.282+05:30  INFO 250143 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown completed.
+2025-03-14T15:46:59.279+05:30  INFO 284737 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Starting BookSyncApplication using Java 23.0.2 with PID 284737 (/home/vasu/personal/booksync/target/classes started by vasu in /home/vasu/personal/booksync)
+2025-03-14T15:46:59.280+05:30 DEBUG 284737 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-14T15:46:59.281+05:30  INFO 284737 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-03-14T15:46:59.761+05:30  INFO 284737 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-14T15:46:59.769+05:30  INFO 284737 --- [Book Sync] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-14T15:46:59.769+05:30  INFO 284737 --- [Book Sync] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-03-14T15:46:59.789+05:30  INFO 284737 --- [Book Sync] [main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2025-03-14T15:46:59.790+05:30  INFO 284737 --- [Book Sync] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 485 ms
+2025-03-14T15:46:59.896+05:30  INFO 284737 --- [Book Sync] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-03-14T15:47:00.104+05:30  INFO 284737 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Starting...
+2025-03-14T15:47:00.179+05:30  INFO 284737 --- [Book Sync] [main] com.zaxxer.hikari.pool.HikariPool        : BooksyncHikariCP - Added connection org.postgresql.jdbc.PgConnection@3e38c472
+2025-03-14T15:47:00.180+05:30  INFO 284737 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Start completed.
+2025-03-14T15:47:00.194+05:30  INFO 284737 --- [Book Sync] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/booksyncDB (PostgreSQL 17.2)
+2025-03-14T15:47:00.217+05:30  INFO 284737 --- [Book Sync] [main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.012s)
+2025-03-14T15:47:00.240+05:30  INFO 284737 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2025-03-14T15:47:00.242+05:30  INFO 284737 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2025-03-14T15:47:00.279+05:30  INFO 284737 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api/v1'
+2025-03-14T15:47:00.284+05:30  INFO 284737 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Started BookSyncApplication in 1.234 seconds (process running for 1.379)
+2025-03-14T15:47:05.138+05:30  INFO 284737 --- [Book Sync] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-14T15:47:05.140+05:30  INFO 284737 --- [Book Sync] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-14T15:47:05.143+05:30  INFO 284737 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown initiated...
+2025-03-14T15:47:05.145+05:30  INFO 284737 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown completed.
+2025-03-14T15:47:30.052+05:30  INFO 285974 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Starting BookSyncApplication using Java 23.0.2 with PID 285974 (/home/vasu/personal/booksync/target/classes started by vasu in /home/vasu/personal/booksync)
+2025-03-14T15:47:30.053+05:30 DEBUG 285974 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-14T15:47:30.054+05:30  INFO 285974 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-03-14T15:47:30.878+05:30  INFO 285974 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-14T15:47:30.890+05:30  INFO 285974 --- [Book Sync] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-14T15:47:30.891+05:30  INFO 285974 --- [Book Sync] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-03-14T15:47:30.926+05:30  INFO 285974 --- [Book Sync] [main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2025-03-14T15:47:30.926+05:30  INFO 285974 --- [Book Sync] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 832 ms
+2025-03-14T15:47:31.101+05:30  INFO 285974 --- [Book Sync] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-03-14T15:47:31.386+05:30  INFO 285974 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Starting...
+2025-03-14T15:47:31.461+05:30  INFO 285974 --- [Book Sync] [main] com.zaxxer.hikari.pool.HikariPool        : BooksyncHikariCP - Added connection org.postgresql.jdbc.PgConnection@554566a8
+2025-03-14T15:47:31.462+05:30  INFO 285974 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Start completed.
+2025-03-14T15:47:31.476+05:30  INFO 285974 --- [Book Sync] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/booksyncDB (PostgreSQL 17.2)
+2025-03-14T15:47:31.499+05:30  INFO 285974 --- [Book Sync] [main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.012s)
+2025-03-14T15:47:31.522+05:30  INFO 285974 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2025-03-14T15:47:31.523+05:30  INFO 285974 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2025-03-14T15:47:31.561+05:30  INFO 285974 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api/v1'
+2025-03-14T15:47:31.566+05:30  INFO 285974 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Started BookSyncApplication in 1.893 seconds (process running for 2.136)
+2025-03-14T15:47:37.715+05:30  INFO 285974 --- [Book Sync] [http-nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-14T15:47:37.715+05:30  INFO 285974 --- [Book Sync] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-03-14T15:47:37.716+05:30  INFO 285974 --- [Book Sync] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-03-14T15:49:17.558+05:30  INFO 285974 --- [Book Sync] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-14T15:49:17.561+05:30  INFO 285974 --- [Book Sync] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-14T15:49:17.564+05:30  INFO 285974 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown initiated...
+2025-03-14T15:49:17.566+05:30  INFO 285974 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown completed.
+2025-03-14T16:07:40.956+05:30  INFO 321736 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Starting BookSyncApplication using Java 23.0.2 with PID 321736 (/home/vasu/personal/booksync/target/classes started by vasu in /home/vasu/personal/booksync)
+2025-03-14T16:07:40.960+05:30 DEBUG 321736 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-14T16:07:40.960+05:30  INFO 321736 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-03-14T16:07:41.443+05:30  INFO 321736 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-14T16:07:41.450+05:30  INFO 321736 --- [Book Sync] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-14T16:07:41.451+05:30  INFO 321736 --- [Book Sync] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-03-14T16:07:41.473+05:30  INFO 321736 --- [Book Sync] [main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2025-03-14T16:07:41.474+05:30  INFO 321736 --- [Book Sync] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 489 ms
+2025-03-14T16:07:41.581+05:30  INFO 321736 --- [Book Sync] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-03-14T16:07:41.784+05:30  INFO 321736 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Starting...
+2025-03-14T16:07:41.866+05:30  INFO 321736 --- [Book Sync] [main] com.zaxxer.hikari.pool.HikariPool        : BooksyncHikariCP - Added connection org.postgresql.jdbc.PgConnection@63124022
+2025-03-14T16:07:41.867+05:30  INFO 321736 --- [Book Sync] [main] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Start completed.
+2025-03-14T16:07:41.884+05:30  INFO 321736 --- [Book Sync] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/booksyncDB (PostgreSQL 17.2)
+2025-03-14T16:07:41.935+05:30  INFO 321736 --- [Book Sync] [main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.012s)
+2025-03-14T16:07:41.956+05:30  INFO 321736 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2025-03-14T16:07:41.958+05:30  INFO 321736 --- [Book Sync] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2025-03-14T16:07:42.000+05:30  INFO 321736 --- [Book Sync] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api/v1'
+2025-03-14T16:07:42.004+05:30  INFO 321736 --- [Book Sync] [main] m.vasujain.booksync.BookSyncApplication  : Started BookSyncApplication in 1.273 seconds (process running for 1.423)
+2025-03-14T16:07:44.172+05:30  INFO 321736 --- [Book Sync] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-14T16:07:44.176+05:30  INFO 321736 --- [Book Sync] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-14T16:07:44.179+05:30  INFO 321736 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown initiated...
+2025-03-14T16:07:44.181+05:30  INFO 321736 --- [Book Sync] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : BooksyncHikariCP - Shutdown completed.

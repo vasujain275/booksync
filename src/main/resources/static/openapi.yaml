@@ -1,0 +1,1012 @@
+openapi: 3.0.3
+info:
+  title: Library Management System API
+  description: >
+    API for managing library users, books, loans, and reviews with OpenLibrary API integration.
+    All endpoints return a standardized API response wrapper.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Users
+    description: Endpoints for user management.
+  - name: Books
+    description: Endpoints for managing books.
+  - name: Loans
+    description: Endpoints for borrowing/returning books.
+  - name: BookReviews
+    description: Endpoints for managing book reviews.
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get a list of users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Users not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateDTO'
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+                      pagination:
+                        type: "null"
+        '404':
+          description: User creation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get a user by ID
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The user's unique ID.
+      responses:
+        '200':
+          description: User found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+                      pagination:
+                        type: "null"
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    put:
+      tags:
+        - Users
+      summary: Update an existing user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The user's unique ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateDTO'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+                      pagination:
+                        type: "null"
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The user's unique ID.
+      responses:
+        '204':
+          description: User deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: "null"
+                      pagination:
+                        type: "null"
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /books:
+    get:
+      tags:
+        - Books
+      summary: Get a list of books (supports pagination)
+      parameters:
+        - in: query
+          name: paginate
+          schema:
+            type: boolean
+          description: Whether to paginate results.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+          description: Page number (0-indexed).
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+          description: Number of books per page.
+      responses:
+        '200':
+          description: A list of books. If paginated, pagination metadata is returned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/Book'
+                          - type: "null"
+                      pagination:
+                        oneOf:
+                          - $ref: '#/components/schemas/PaginationMetadata'
+                          - type: "null"
+        '404':
+          description: Books not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    post:
+      tags:
+        - Books
+      summary: Create a new book entry by providing its ISBN.
+      description: >
+        Provide the ISBN of the book to create a new entry.
+        The system will use the provided ISBN to fetch book details from the OpenLibrary API.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreateDTO'
+      responses:
+        '201':
+          description: Book created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Book'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book creation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /books/{bookId}:
+    get:
+      tags:
+        - Books
+      summary: Get a book by ID
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book's unique ID.
+      responses:
+        '200':
+          description: Book found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Book'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    put:
+      tags:
+        - Books
+      summary: Update an existing book
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book's unique ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdateDTO'
+      responses:
+        '200':
+          description: Book updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Book'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    delete:
+      tags:
+        - Books
+      summary: Delete a book
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book's unique ID.
+      responses:
+        '204':
+          description: Book deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: "null"
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /loans:
+    get:
+      tags:
+        - Loans
+      summary: Get a list of loans
+      responses:
+        '200':
+          description: A list of loans.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Loan'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Loans not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    post:
+      tags:
+        - Loans
+      summary: Create a new loan (borrow a book)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanCreateDTO'
+      responses:
+        '201':
+          description: Loan created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Loan'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Loan creation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /loans/{loanId}:
+    get:
+      tags:
+        - Loans
+      summary: Get loan details by ID
+      parameters:
+        - in: path
+          name: loanId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The loan's unique ID.
+      responses:
+        '200':
+          description: Loan details found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Loan'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Loan not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    put:
+      tags:
+        - Loans
+      summary: Update a loan (e.g., return a book)
+      parameters:
+        - in: path
+          name: loanId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The loan's unique ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanUpdateDTO'
+      responses:
+        '200':
+          description: Loan updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Loan'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Loan not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /bookreviews:
+    get:
+      tags:
+        - BookReviews
+      summary: Get a list of book reviews
+      responses:
+        '200':
+          description: A list of book reviews.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book reviews not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    post:
+      tags:
+        - BookReviews
+      summary: Create a new book review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReviewCreateDTO'
+      responses:
+        '201':
+          description: Book review created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review creation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /bookreviews/{reviewId}:
+    get:
+      tags:
+        - BookReviews
+      summary: Get a book review by ID
+      parameters:
+        - in: path
+          name: reviewId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The review's unique ID.
+      responses:
+        '200':
+          description: Book review found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    put:
+      tags:
+        - BookReviews
+      summary: Update an existing book review
+      parameters:
+        - in: path
+          name: reviewId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The review's unique ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReviewUpdateDTO'
+      responses:
+        '200':
+          description: Book review updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    delete:
+      tags:
+        - BookReviews
+      summary: Delete a book review
+      parameters:
+        - in: path
+          name: reviewId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The review's unique ID.
+      responses:
+        '204':
+          description: Book review deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: "null"
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status message.
+        message:
+          type: string
+          description: A brief message about the result.
+        timestamp:
+          type: string
+          format: date
+          description: Response timestamp.
+        data:
+          description: The payload of the response.
+          oneOf:
+            - type: object
+            - type: array
+            - type: "null"
+        pagination:
+          description: Pagination metadata if available.
+          oneOf:
+            - $ref: '#/components/schemas/PaginationMetadata'
+            - type: "null"
+    ApiResponseError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status message.
+        message:
+          type: string
+          description: Error message.
+        timestamp:
+          type: string
+          format: date
+          description: Response timestamp.
+    PaginationMetadata:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [admin, member]
+        firstName:
+          type: string
+        lastName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        username: "johndoe"
+        email: "john@example.com"
+        role: "member"
+        firstName: "John"
+        lastName: "Doe"
+        createdAt: "2025-03-14T12:00:00Z"
+        updatedAt: "2025-03-14T12:00:00Z"
+    UserCreateDTO:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - role
+        - firstName
+        - lastName
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [admin, member]
+        firstName:
+          type: string
+        lastName:
+          type: string
+      example:
+        username: "johndoe"
+        email: "john@example.com"
+        password: "securepassword"
+        role: "member"
+        firstName: "John"
+        lastName: "Doe"
+    UserUpdateDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [admin, member]
+        firstName:
+          type: string
+        lastName:
+          type: string
+      example:
+        username: "john_doe_updated"
+        email: "john.updated@example.com"
+        role: "member"
+        firstName: "John"
+        lastName: "Doe"
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        isbn:
+          type: string
+        title:
+          type: string
+        authors:
+          type: string
+        publishDate:
+          type: string
+        publisher:
+          type: string
+        coverId:
+          type: integer
+        firstSentence:
+          type: string
+        numberOfPages:
+          type: integer
+        isbn10:
+          type: string
+        isbn13:
+          type: string
+        ocaid:
+          type: string
+        workKey:
+          type: string
+        category:
+          type: string
+        totalCopies:
+          type: integer
+        availableCopies:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        isbn: "9780140328721"
+        title: "Matilda"
+        authors: "Roald Dahl"
+        publishDate: "October 1, 1988"
+        publisher: "Puffin"
+        coverId: 12345
+        firstSentence: "The first sentence of the book..."
+        numberOfPages: 240
+        isbn10: "0140328726"
+        isbn13: "9780140328721"
+        ocaid: "ocaid_example"
+        workKey: "OL123W"
+        category: "Children's Literature"
+        totalCopies: 5
+        availableCopies: 5
+        createdAt: "2025-03-14T12:00:00Z"
+        updatedAt: "2025-03-14T12:00:00Z"
+    BookCreateDTO:
+      type: object
+      required:
+        - isbn
+      properties:
+        isbn:
+          type: string
+          description: >
+            The ISBN of the book (ISBN-10 or ISBN-13).
+            The system will use this value to fetch book details from the OpenLibrary API.
+      example:
+        isbn: "9780140328721"
+    BookUpdateDTO:
+      type: object
+      properties:
+        category:
+          type: string
+        totalCopies:
+          type: integer
+        availableCopies:
+          type: integer
+      example:
+        category: "Classic Children's Literature"
+        totalCopies: 6
+        availableCopies: 6
+    Loan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        bookId:
+          type: string
+          format: uuid
+        borrowedDate:
+          type: string
+          format: date
+        dueDate:
+          type: string
+          format: date
+        returnedDate:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          enum: [active, returned, overdue]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        userId: "550e8400-e29b-41d4-a716-446655440001"
+        bookId: "550e8400-e29b-41d4-a716-446655440002"
+        borrowedDate: "2025-03-10"
+        dueDate: "2025-03-20"
+        returnedDate: null
+        status: "active"
+        createdAt: "2025-03-10T12:00:00Z"
+        updatedAt: "2025-03-10T12:00:00Z"
+    LoanCreateDTO:
+      type: object
+      required:
+        - userId
+        - bookId
+        - borrowedDate
+        - dueDate
+      properties:
+        userId:
+          type: string
+          format: uuid
+        bookId:
+          type: string
+          format: uuid
+        borrowedDate:
+          type: string
+          format: date
+        dueDate:
+          type: string
+          format: date
+      example:
+        userId: "550e8400-e29b-41d4-a716-446655440001"
+        bookId: "550e8400-e29b-41d4-a716-446655440002"
+        borrowedDate: "2025-03-10"
+        dueDate: "2025-03-20"
+    LoanUpdateDTO:
+      type: object
+      properties:
+        returnedDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [active, returned, overdue]
+      example:
+        returnedDate: "2025-03-15"
+        status: "returned"
+    BookReview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bookId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        reviewText:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        bookId: "550e8400-e29b-41d4-a716-446655440002"
+        userId: "550e8400-e29b-41d4-a716-446655440001"
+        rating: 4
+        reviewText: "Great book!"
+        createdAt: "2025-03-14T12:00:00Z"
+    BookReviewCreateDTO:
+      type: object
+      required:
+        - bookId
+        - userId
+        - rating
+      properties:
+        bookId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        reviewText:
+          type: string
+      example:
+        bookId: "550e8400-e29b-41d4-a716-446655440002"
+        userId: "550e8400-e29b-41d4-a716-446655440001"
+        rating: 5
+        reviewText: "Amazing read!"
+    BookReviewUpdateDTO:
+      type: object
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        reviewText:
+          type: string
+      example:
+        rating: 4
+        reviewText: "Updated review text."

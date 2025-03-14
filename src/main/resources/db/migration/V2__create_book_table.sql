@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS "book" (
+    id UUID PRIMARY KEY,
+    isbn VARCHAR UNIQUE NOT NULL,
+    title VARCHAR NOT NULL,
+    authors TEXT,
+    publish_date VARCHAR,
+    publisher VARCHAR,
+    cover_id INTEGER,
+    first_sentence TEXT,
+    number_of_pages INTEGER,
+    isbn_10 VARCHAR,
+    isbn_13 VARCHAR,
+    ocaid VARCHAR,
+    work_key VARCHAR,
+    category VARCHAR,
+    total_copies INTEGER NOT NULL,
+    available_copies INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);

@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: booksync
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/booksyncDB
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+    # Connection pool settings for better performance
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000  # 30 seconds
+      connection-timeout: 30000  # 30 seconds
+      max-lifetime: 1800000  # 30 minutes
+      pool-name: BooksyncHikariCP
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    out-of-order: false
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+springdoc:
+  swagger-ui:
+    path: /docs
+    urls:
+      - url: /openapi.yaml
+        name: Book Sync API
+  api-docs:
+    enabled: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  override-with-generic-response: false
+
+
+logging:
+  level:
+    root: INFO
+    me.vasujain.booksync: DEBUG  # Your base package for debugging queries
+  file:
+    name: logs/booksync-api.log  # Optional file logging
