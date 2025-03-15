@@ -3,6 +3,7 @@ package me.vasujain.booksync.service;
 import me.vasujain.booksync.dto.BookCreateDTO;
 import me.vasujain.booksync.dto.BookUpdateDTO;
 import me.vasujain.booksync.dto.PaginatedResult;
+import me.vasujain.booksync.expection.ResourceNotFoundException;
 import me.vasujain.booksync.model.Book;
 import me.vasujain.booksync.repository.BookRepository;
 import org.springframework.stereotype.Service;
