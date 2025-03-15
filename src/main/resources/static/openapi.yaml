@@ -596,6 +596,213 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
                   - type: object
+                    properties:
+                      data:
+                        type: "null"
+                      pagination:
+                        type: "null"
+        '404':
+          description: Loan not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /bookreviews:
+    get:
+      tags:
+        - BookReviews
+      summary: Get a list of book reviews (supports pagination and sorting)
+      parameters:
+        - in: query
+          name: paginate
+          schema:
+            type: boolean
+            default: false
+          description: Whether to paginate results.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+          description: Page number (0-indexed).
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+          description: Number of reviews per page.
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            default: created_at
+          description: Field to sort by (created_at, rating).
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [asc, desc, ASC, DESC]
+            default: asc
+          description: Sort direction (ascending or descending).
+      responses:
+        '200':
+          description: A list of book reviews. If paginated, pagination metadata is returned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/BookReview'
+                          - type: "null"
+                      pagination:
+                        oneOf:
+                          - $ref: '#/components/schemas/PaginationMetadata'
+                          - type: "null"
+        '404':
+          description: Book reviews not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    post:
+      tags:
+        - BookReviews
+      summary: Create a new book review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReviewCreateDTO'
+      responses:
+        '201':
+          description: Book review created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+  /bookreviews/{id}:
+    get:
+      tags:
+        - BookReviews
+      summary: Get a book review by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book review's unique ID.
+      responses:
+        '200':
+          description: Book review found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    put:
+      tags:
+        - BookReviews
+      summary: Update an existing book review
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book review's unique ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReviewUpdateDTO'
+      responses:
+        '200':
+          description: Book review updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BookReview'
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    delete:
+      tags:
+        - BookReviews
+      summary: Delete a book review
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The book review's unique ID.
+      responses:
+        '204':
+          description: Book review deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: "null"
+                      pagination:
+                        type: "null"
+        '404':
+          description: Book review not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
 components:
   schemas:
     ApiResponse:
