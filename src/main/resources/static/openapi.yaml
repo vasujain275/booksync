@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Library Management System API
   description: >
-    API for managing library users, books, loans, and reviews with OpenLibrary API integration.
+    API for managing library users, books, loans, and reviews.
     All endpoints return a standardized API response wrapper.
   version: 1.0.0
 servers:
@@ -22,6 +22,38 @@ paths:
       tags:
         - Users
       summary: Get a list of users
+      parameters:
+        - in: query
+          name: paginate
+          schema:
+            type: boolean
+            default: false
+          description: Whether to paginate results.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+          description: Page number (0-indexed).
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+          description: Number of users per page.
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            default: username
+          description: Field to sort by (username, email, firstName, lastName, createdAt).
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [asc, desc, ASC, DESC]
+            default: asc
+          description: Sort direction (ascending or descending).
       responses:
         '200':
           description: A list of users
@@ -33,11 +65,15 @@ paths:
                   - type: object
                     properties:
                       data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/User'
+                        oneOf:
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/User'
+                          - type: "null"
                       pagination:
-                        type: "null"
+                        oneOf:
+                          - $ref: '#/components/schemas/PaginationMetadata'
+                          - type: "null"
         '404':
           description: Users not found.
           content:
@@ -181,12 +217,13 @@ paths:
     get:
       tags:
         - Books
-      summary: Get a list of books (supports pagination)
+      summary: Get a list of books (supports pagination and sorting)
       parameters:
         - in: query
           name: paginate
           schema:
             type: boolean
+            default: false
           description: Whether to paginate results.
         - in: query
           name: page
@@ -200,6 +237,19 @@ paths:
             type: integer
             default: 10
           description: Number of books per page.
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            default: created_at
+          description: Field to sort by (title, authors, publishDate, category, created_at).
+        - in: query
+          name: sortDir
+          schema:
+            type: string
+            enum: [asc, desc, ASC, DESC]
+            default: DESC
+          description: Sort direction (ascending or descending).
       responses:
         '200':
           description: A list of books. If paginated, pagination metadata is returned.
@@ -229,10 +279,9 @@ paths:
     post:
       tags:
         - Books
-      summary: Create a new book entry by providing its ISBN.
+      summary: Create a new book entry.
       description: >
-        Provide the ISBN of the book to create a new entry.
-        The system will use the provided ISBN to fetch book details from the OpenLibrary API.
+        Provide the details of the book to create a new entry.
       requestBody:
         required: true
         content:
@@ -253,8 +302,8 @@ paths:
                         $ref: '#/components/schemas/Book'
                       pagination:
                         type: "null"
-        '404':
-          description: Book creation failed.
+        '400':
+          description: Invalid input data.
           content:
             application/json:
               schema:
@@ -367,6 +416,38 @@ paths:
       tags:
         - Loans
       summary: Get a list of loans
+      parameters:
+        - in: query
+          name: paginate
+          schema:
+            type: boolean
+            default: false
+          description: Whether to paginate results.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+          description: Page number (0-indexed).
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+          description: Number of loans per page.
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            default: borrowed_date
+          description: Field to sort by (borrowedDate, dueDate, returnedDate, status).
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [asc, desc, ASC, DESC]
+            default: asc
+          description: Sort direction (ascending or descending).
       responses:
         '200':
           description: A list of loans.
@@ -378,11 +459,15 @@ paths:
                   - type: object
                     properties:
                       data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Loan'
+                        oneOf:
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/Loan'
+                          - type: "null"
                       pagination:
-                        type: "null"
+                        oneOf:
+                          - $ref: '#/components/schemas/PaginationMetadata'
+                          - type: "null"
         '404':
           description: Loans not found.
           content:
@@ -490,166 +575,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-  /bookreviews:
-    get:
-      tags:
-        - BookReviews
-      summary: Get a list of book reviews
-      responses:
-        '200':
-          description: A list of book reviews.
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/BookReview'
-                      pagination:
-                        type: "null"
-        '404':
-          description: Book reviews not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponseError'
-    post:
-      tags:
-        - BookReviews
-      summary: Create a new book review
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookReviewCreateDTO'
-      responses:
-        '201':
-          description: Book review created successfully.
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BookReview'
-                      pagination:
-                        type: "null"
-        '404':
-          description: Book review creation failed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponseError'
-  /bookreviews/{reviewId}:
-    get:
-      tags:
-        - BookReviews
-      summary: Get a book review by ID
-      parameters:
-        - in: path
-          name: reviewId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: The review's unique ID.
-      responses:
-        '200':
-          description: Book review found.
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BookReview'
-                      pagination:
-                        type: "null"
-        '404':
-          description: Book review not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponseError'
-    put:
-      tags:
-        - BookReviews
-      summary: Update an existing book review
-      parameters:
-        - in: path
-          name: reviewId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: The review's unique ID.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookReviewUpdateDTO'
-      responses:
-        '200':
-          description: Book review updated successfully.
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BookReview'
-                      pagination:
-                        type: "null"
-        '404':
-          description: Book review not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponseError'
     delete:
       tags:
-        - BookReviews
-      summary: Delete a book review
+        - Loans
+      summary: Delete a loan
       parameters:
         - in: path
-          name: reviewId
+          name: loanId
           schema:
             type: string
             format: uuid
           required: true
-          description: The review's unique ID.
+          description: The loan's unique ID.
       responses:
         '204':
-          description: Book review deleted successfully.
+          description: Loan deleted successfully.
           content:
             application/json:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
                   - type: object
-                    properties:
-                      data:
-                        type: "null"
-                      pagination:
-                        type: "null"
-        '404':
-          description: Book review not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponseError'
 components:
   schemas:
     ApiResponse:
@@ -788,36 +734,20 @@ components:
         id:
           type: string
           format: uuid
-        isbn:
-          type: string
         title:
           type: string
         authors:
-          type: string
-        publishDate:
+          type: array
+          items:
+            type: string
+        description:
           type: string
         publisher:
           type: string
-        coverId:
-          type: integer
-        firstSentence:
-          type: string
-        numberOfPages:
-          type: integer
-        isbn10:
-          type: string
-        isbn13:
-          type: string
-        ocaid:
-          type: string
-        workKey:
+        publishedDate:
           type: string
         category:
           type: string
-        totalCopies:
-          type: integer
-        availableCopies:
-          type: integer
         createdAt:
           type: string
           format: date-time
@@ -826,48 +756,68 @@ components:
           format: date-time
       example:
         id: "550e8400-e29b-41d4-a716-446655440000"
-        isbn: "9780140328721"
-        title: "Matilda"
-        authors: "Roald Dahl"
-        publishDate: "October 1, 1988"
-        publisher: "Puffin"
-        coverId: 12345
-        firstSentence: "The first sentence of the book..."
-        numberOfPages: 240
-        isbn10: "0140328726"
-        isbn13: "9780140328721"
-        ocaid: "ocaid_example"
-        workKey: "OL123W"
-        category: "Children's Literature"
-        totalCopies: 5
-        availableCopies: 5
+        title: "The Great Gatsby"
+        authors: [ "F. Scott Fitzgerald" ]
+        description: "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan."
+        publisher: "Charles Scribner's Sons"
+        publishedDate: "1925-04-10"
+        category: "Fiction"
         createdAt: "2025-03-14T12:00:00Z"
         updatedAt: "2025-03-14T12:00:00Z"
     BookCreateDTO:
       type: object
       required:
-        - isbn
+        - title
+        - authors
+        - publisher
+        - publishedDate
+        - category
       properties:
-        isbn:
+        title:
           type: string
-          description: >
-            The ISBN of the book (ISBN-10 or ISBN-13).
-            The system will use this value to fetch book details from the OpenLibrary API.
+        authors:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        publisher:
+          type: string
+        publishedDate:
+          type: string
+        category:
+          type: string
       example:
-        isbn: "9780140328721"
+        title: "The Great Gatsby"
+        authors: [ "F. Scott Fitzgerald" ]
+        description: "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan."
+        publisher: "Charles Scribner's Sons"
+        publishedDate: "1925-04-10"
+        category: "Fiction"
     BookUpdateDTO:
       type: object
       properties:
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        publisher:
+          type: string
+        publishedDate:
+          type: string
         category:
           type: string
-        totalCopies:
-          type: integer
-        availableCopies:
-          type: integer
       example:
-        category: "Classic Children's Literature"
-        totalCopies: 6
-        availableCopies: 6
+        title: "The Great Gatsby (Updated)"
+        authors: [ "F. Scott Fitzgerald" ]
+        description: "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan."
+        publisher: "Charles Scribner's Sons"
+        publishedDate: "1925-04-10"
+        category: "Classic Fiction"
     Loan:
       type: object
       properties:

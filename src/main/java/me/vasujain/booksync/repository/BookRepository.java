@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class BookRepository {
@@ -26,21 +24,12 @@ public class BookRepository {
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
             return Book.builder()
                     .id((UUID) rs.getObject("id"))
-                    .isbn(rs.getString("isbn"))
                     .title(rs.getString("title"))
-                    .authors(rs.getString("authors"))
-                    .publishDate(rs.getString("publish_date"))
+                    .authors(rs.getString("authors") != null ? Arrays.asList(rs.getString("authors").split(", ")) : Collections.emptyList())
+                    .description(rs.getString("description"))
                     .publisher(rs.getString("publisher"))
-                    .coverId(rs.getObject("cover_id") != null ? rs.getInt("cover_id") : null)
-                    .firstSentence(rs.getString("first_sentence"))
-                    .numberOfPages(rs.getObject("number_of_pages") != null ? rs.getInt("number_of_pages") : null)
-                    .isbn10(rs.getString("isbn_10"))
-                    .isbn13(rs.getString("isbn_13"))
-                    .ocaid(rs.getString("ocaid"))
-                    .workKey(rs.getString("work_key"))
+                    .publishedDate(rs.getString("published_date"))
                     .category(rs.getString("category"))
-                    .totalCopies(rs.getInt("total_copies"))
-                    .availableCopies(rs.getInt("available_copies"))
                     .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                     .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
                     .build();
@@ -76,53 +65,31 @@ public class BookRepository {
     }
 
     public int save(Book book) {
-        String sql = "INSERT INTO book (id, isbn, title, authors, publish_date, publisher, cover_id, first_sentence, " +
-                "number_of_pages, isbn_10, isbn_13, ocaid, work_key, category, total_copies, available_copies, created_at, updated_at) " +
-                "VALUES (:id, :isbn, :title, :authors, :publish_date, :publisher, :cover_id, :first_sentence, " +
-                ":number_of_pages, :isbn_10, :isbn_13, :ocaid, :work_key, :category, :total_copies, :available_copies, :created_at, :updated_at)";
+        String sql = "INSERT INTO book (id, title, authors, description, publisher, published_date, category, created_at, updated_at) " +
+                "VALUES (:id, :title, :authors, :description, :publisher, :published_date, :category, :created_at, :updated_at)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", book.getId());
-        params.addValue("isbn", book.getIsbn());
         params.addValue("title", book.getTitle());
-        params.addValue("authors", book.getAuthors());
-        params.addValue("publish_date", book.getPublishDate());
+        params.addValue("authors", String.join(", ", book.getAuthors()));
+        params.addValue("description", book.getDescription());
         params.addValue("publisher", book.getPublisher());
-        params.addValue("cover_id", book.getCoverId());
-        params.addValue("first_sentence", book.getFirstSentence());
-        params.addValue("number_of_pages", book.getNumberOfPages());
-        params.addValue("isbn_10", book.getIsbn10());
-        params.addValue("isbn_13", book.getIsbn13());
-        params.addValue("ocaid", book.getOcaid());
-        params.addValue("work_key", book.getWorkKey());
+        params.addValue("published_date", book.getPublishedDate());
         params.addValue("category", book.getCategory());
-        params.addValue("total_copies", book.getTotalCopies());
-        params.addValue("available_copies", book.getAvailableCopies());
         params.addValue("created_at", book.getCreatedAt());
         params.addValue("updated_at", book.getUpdatedAt());
         return namedParameterJdbcTemplate.update(sql, params);
     }
 
     public int update(Book book) {
-        String sql = "UPDATE book SET title = :title, authors = :authors, publish_date = :publish_date, " +
-                "publisher = :publisher, cover_id = :cover_id, first_sentence = :first_sentence, " +
-                "number_of_pages = :number_of_pages, isbn_10 = :isbn_10, isbn_13 = :isbn_13, " +
-                "ocaid = :ocaid, work_key = :work_key, category = :category, total_copies = :total_copies, " +
-                "available_copies = :available_copies, updated_at = :updated_at WHERE id = :id";
+        String sql = "UPDATE book SET title = :title, authors = :authors, description = :description, publisher = :publisher, " +
+                "published_date = :published_date, category = :category, updated_at = :updated_at WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("title", book.getTitle());
-        params.addValue("authors", book.getAuthors());
-        params.addValue("publish_date", book.getPublishDate());
+        params.addValue("authors", String.join(", ", book.getAuthors()));
+        params.addValue("description", book.getDescription());
         params.addValue("publisher", book.getPublisher());
-        params.addValue("cover_id", book.getCoverId());
-        params.addValue("first_sentence", book.getFirstSentence());
-        params.addValue("number_of_pages", book.getNumberOfPages());
-        params.addValue("isbn_10", book.getIsbn10());
-        params.addValue("isbn_13", book.getIsbn13());
-        params.addValue("ocaid", book.getOcaid());
-        params.addValue("work_key", book.getWorkKey());
+        params.addValue("published_date", book.getPublishedDate());
         params.addValue("category", book.getCategory());
-        params.addValue("total_copies", book.getTotalCopies());
-        params.addValue("available_copies", book.getAvailableCopies());
         params.addValue("updated_at", book.getUpdatedAt());
         params.addValue("id", book.getId());
         return namedParameterJdbcTemplate.update(sql, params);

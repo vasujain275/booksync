@@ -1,9 +1,14 @@
 package me.vasujain.booksync.dto;
 
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class BookCreateDTO {
-    // For book creation only the ISBN is required.
-    private String isbn;
+    private String title;
+    private List<String> authors;
+    private String description;
+    private String publisher;
+    private String publishedDate;
+    private String category;
 }

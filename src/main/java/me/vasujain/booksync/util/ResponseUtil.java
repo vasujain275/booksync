@@ -21,8 +21,7 @@ public class ResponseUtil {
                 .status(HttpStatus.OK)
                 .message(message)
                 .timestamp(LocalDate.now())
-                // Set data to null or an appropriate value since pagination info is provided separately
-                .data(null)
+                .data((T) paginatedResult.getContent())
                 .pagination(ApiResponse.PaginationMetadata.builder()
                         .totalElements((int) paginatedResult.getTotalElements())
                         .totalPages(paginatedResult.getTotalPages())

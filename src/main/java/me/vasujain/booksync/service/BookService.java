@@ -8,22 +8,18 @@ import me.vasujain.booksync.model.Book;
 import me.vasujain.booksync.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final RestTemplate restTemplate;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.restTemplate = new RestTemplate();
     }
 
     public Object getAllBooks(boolean paginate, int page, int size, String sortBy, String sortDir) {
@@ -40,49 +36,41 @@ public class BookService {
                     .totalPages(totalPages)
                     .build();
         } else {
-            // When not paginated, sort still applies.
             return bookRepository.findAll(0, Integer.MAX_VALUE, sortBy, sortDir);
         }
     }
 
     public Book getBookById(UUID id) {
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            throw new ResourceNotFoundException("Book not found with id: " + id);
-        }
-        return optionalBook.get();
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
     }
 
     @Transactional
     public Book createBook(BookCreateDTO bookCreateDTO) {
-        String isbn = bookCreateDTO.getIsbn();
-        String url = "https://openlibrary.org/isbn/" + isbn + ".json";
-        // Call the external OpenLibrary API and map the response to a Book.
-        Book openLibraryBook = restTemplate.getForObject(url, Book.class);
-        if (openLibraryBook == null) {
-            throw new RuntimeException("Unable to fetch book details for ISBN: " + isbn);
-        }
-        // Manually generate UUID and timestamps.
-        openLibraryBook.setId(UUID.randomUUID());
-        openLibraryBook.setCreatedAt(LocalDateTime.now());
-        openLibraryBook.setUpdatedAt(LocalDateTime.now());
-        bookRepository.save(openLibraryBook);
-        return openLibraryBook;
+        Book book = Book.builder()
+                .id(UUID.randomUUID())
+                .title(bookCreateDTO.getTitle())
+                .authors(bookCreateDTO.getAuthors())
+                .description(bookCreateDTO.getDescription())
+                .publisher(bookCreateDTO.getPublisher())
+                .publishedDate(bookCreateDTO.getPublishedDate())
+                .category(bookCreateDTO.getCategory())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        bookRepository.save(book);
+        return book;
     }
 
     @Transactional
     public Book updateBook(UUID id, BookUpdateDTO updateDTO) {
         Book existingBook = getBookById(id);
-        if (updateDTO.getCategory() != null) {
-            existingBook.setCategory(updateDTO.getCategory());
-        }
-        if (updateDTO.getTotalCopies() != null) {
-            existingBook.setTotalCopies(updateDTO.getTotalCopies());
-        }
-        if (updateDTO.getAvailableCopies() != null) {
-            existingBook.setAvailableCopies(updateDTO.getAvailableCopies());
-        }
-        // Update the updatedAt timestamp.
+        existingBook.setTitle(updateDTO.getTitle());
+        existingBook.setAuthors(updateDTO.getAuthors());
+        existingBook.setDescription(updateDTO.getDescription());
+        existingBook.setPublisher(updateDTO.getPublisher());
+        existingBook.setPublishedDate(updateDTO.getPublishedDate());
+        existingBook.setCategory(updateDTO.getCategory());
         existingBook.setUpdatedAt(LocalDateTime.now());
         bookRepository.update(existingBook);
         return existingBook;
