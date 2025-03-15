@@ -609,8 +609,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponseError'
   /bookreviews:
     get:
-      tags:
-        - BookReviews
+      tags: [BookReviews]
       summary: Get a list of book reviews (supports pagination and sorting)
       parameters:
         - in: query
