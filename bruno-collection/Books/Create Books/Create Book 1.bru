@@ -1,0 +1,24 @@
+meta {
+  name: Create Book 1
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "The Great Gatsby (Updated)",
+    "authors": [
+      "F. Scott Fitzgerald"
+    ],
+    "description": "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+    "publisher": "Charles Scribner's Sons",
+    "publishedDate": "1925-04-10",
+    "category": "Classic Fiction"
+  }
+}

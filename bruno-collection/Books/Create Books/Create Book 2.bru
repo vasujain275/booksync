@@ -1,0 +1,24 @@
+meta {
+  name: Create Book 2
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Dune",
+    "authors": [
+      "Frank Herbert"
+    ],
+    "description": "A science fiction epic set in the distant future amidst a feudal interstellar society.",
+    "publisher": "Chilton Books",
+    "publishedDate": "1965-08-01",
+    "category": "Science Fiction"
+  }
+}

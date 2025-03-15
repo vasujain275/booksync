@@ -1,0 +1,19 @@
+meta {
+  name: Get All Books
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/books?paginate=true&page=0&size=10&sortBy=id&sortDir=DESC
+  body: none
+  auth: none
+}
+
+params:query {
+  paginate: true
+  page: 0
+  size: 10
+  sortBy: id
+  sortDir: DESC
+}

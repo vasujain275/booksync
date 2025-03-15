@@ -1,0 +1,24 @@
+meta {
+  name: Create Book 5
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base}}/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "The Hobbit",
+    "authors": [
+      "J.R.R. Tolkien"
+    ],
+    "description": "A fantasy novel about the adventures of Bilbo Baggins, a hobbit who embarks on a quest to win a share of a dragon's treasure.",
+    "publisher": "George Allen & Unwin",
+    "publishedDate": "1937-09-21",
+    "category": "Fantasy"
+  }
+}

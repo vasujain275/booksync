@@ -1,0 +1,22 @@
+meta {
+  name: Update Book
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{base}}/books/cf55f30f-e814-401b-8ce9-ceb835bbb765
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "The Great Gatsby (Updated)",
+    "authors": ["F. Scott Fitzgerald"],
+    "description": "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+    "publisher": "Charles Scribner's Sons",
+    "publishedDate": "1925-04-10",
+    "category": "Classic Fiction"
+  }
+}
